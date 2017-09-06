@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>WebSocket聊天程序</title>
+</head>
+<body>
+<script type="text/javascript">
+    var socket;
+    var url = "ws://192.168.1.103:8080/ws"
+
+    function connectServer() {
+        if(!document.getElementById("name").value){
+            alert("请输入花名，再建立连接");
+            return;
+        }
+        if (!window.WebSocket) {
+            window.WebSocket = window.MozWebSocket;
+        }
+        if (window.WebSocket) {
+            socket = new WebSocket(url);
+            socket.onmessage = function(event) {
+                var ta = document.getElementById('responseText');
+                ta.value = ta.value + '\n' + event.data
+            };
+            socket.onopen = function(event) {
+                var ta = document.getElementById('responseText');
+                ta.value = "连接开启!";
+                send("sni"+document.getElementById("name").value);
+            };
+            socket.onclose = function(event) {
+                var ta = document.getElementById('responseText');
+                ta.value = ta.value + "连接被关闭";
+
+            };
+        } else {
+            alert("你的浏览器不支持 WebSocket！");
+        }
+    }
+
+    function send(message) {
+        if (!window.WebSocket) {
+            return;
+        }
+        if (socket && socket.readyState == WebSocket.OPEN) {
+            socket.send(message);
+            document.getElementById("message").value='';
+        } else {
+            alert("连接没有开启.");
+        }
+    }
+</script>
+<form onsubmit="return false;">
+    <input type="text" id="name"  style="width: 150px"  placeholder="请输入你的花名">
+    <input type="button" onclick="javascript:connectServer()" value="连接服务器">
+    <h3>WebSocket 聊天室：</h3>
+    <textarea id="responseText" style="width: 500px; height: 300px;"></textarea>
+    <br>
+    <input type="text" id="message" name="message"  style="width: 300px"  placeholder="聊天文字在此输入...">
+    <input type="button" value="发送消息" onclick="send(this.form.message.value)">
+    <input type="button" onclick="javascript:document.getElementById('responseText').value=''" value="清空聊天记录">
+</form>
+<br>
+<br>
+</body>
+</html>
