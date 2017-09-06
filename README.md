@@ -4,5 +4,5 @@
 
 **chat-room**是基于netty与websocket构建的简易在线聊天室
 
-##guide
-**WebSocketClient.html**中的url变量改为自己对应的server地址，即可直接使用
+##start
+将**WebSocketClient.html**中的url变量改为自己对应的server地址，然后启动 WebSocketServer即可
